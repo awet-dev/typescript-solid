@@ -17,7 +17,6 @@ class Car {
         return this._miles;
     }
 
-
     get fuel(): number {
         return this._fuel;
     }
