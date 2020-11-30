@@ -1,0 +1,2 @@
+# typescript-solid
+Type script
