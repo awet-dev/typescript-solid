@@ -18,6 +18,10 @@ var Dog = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Dog.prototype.makeSound = function () {
+        return 'Woef';
+        ;
+    };
     return Dog;
 }());
 var Cat = /** @class */ (function () {
@@ -40,6 +44,9 @@ var Cat = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Cat.prototype.makeSound = function () {
+        return 'Miauw';
+    };
     return Cat;
 }());
 var Parrot = /** @class */ (function () {
@@ -62,6 +69,9 @@ var Parrot = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Parrot.prototype.makeSound = function () {
+        return 'I am a pirate';
+    };
     return Parrot;
 }());
 var Zoo = /** @class */ (function () {
@@ -78,24 +88,13 @@ var Zoo = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Zoo.prototype.makeSound = function (animal) {
-        switch (animal.type) {
-            case 'cat':
-                return 'Miauw';
-            case 'dog':
-                return 'Woef';
-            case 'parrot':
-                return 'I am a pirate';
-            default:
-                throw new Error('Unknown type: ' + animal.type);
-        }
-    };
     return Zoo;
 }());
 var zoo = new Zoo;
 zoo.addAnimal(new Cat);
 zoo.addAnimal(new Dog);
 zoo.addAnimal(new Parrot);
+var cat = new Cat();
 zoo.animals.forEach(function (animal) {
-    document.querySelector('#target').innerHTML += (animal.type + ": " + zoo.makeSound(animal) + "<br>");
+    document.querySelector('#target').innerHTML += (animal.type + ": " + cat.makeSound() + "<br>");
 });
