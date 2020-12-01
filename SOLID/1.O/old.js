@@ -18,10 +18,14 @@ var Dog = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Dog.prototype.makeSound = function () {
-        return 'Woef';
-        ;
-    };
+    Object.defineProperty(Dog.prototype, "makeSound", {
+        get: function () {
+            return 'Woef';
+            ;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Dog;
 }());
 var Cat = /** @class */ (function () {
@@ -44,9 +48,13 @@ var Cat = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Cat.prototype.makeSound = function () {
-        return 'Miauw';
-    };
+    Object.defineProperty(Cat.prototype, "makeSound", {
+        get: function () {
+            return 'Miauw';
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Cat;
 }());
 var Parrot = /** @class */ (function () {
@@ -69,9 +77,13 @@ var Parrot = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Parrot.prototype.makeSound = function () {
-        return 'I am a pirate';
-    };
+    Object.defineProperty(Parrot.prototype, "makeSound", {
+        get: function () {
+            return 'I am a pirate';
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Parrot;
 }());
 var Zoo = /** @class */ (function () {
@@ -94,7 +106,6 @@ var zoo = new Zoo;
 zoo.addAnimal(new Cat);
 zoo.addAnimal(new Dog);
 zoo.addAnimal(new Parrot);
-var cat = new Cat();
 zoo.animals.forEach(function (animal) {
-    document.querySelector('#target').innerHTML += (animal.type + ": " + cat.makeSound() + "<br>");
+    document.querySelector('#target').innerHTML += (animal.type + ": " + animal.makeSound + "<br>");
 });

@@ -1,48 +1,123 @@
 //This is called a Union, the discountType can only contain the following 2 values:
 type discountType = "variable" | "fixed" | "none";
 
-class Discount {
-    private _type: discountType;
-    private _value: number;
+class Variable implements Discount {
+    _type: discountType;
+    _value: number;
 
-    constructor(type : discountType, value : number = 0) {
-        this._type = type;
+    constructor(value : number = 0) {
         this._value = value;
 
-        if(this._type != 'none' && value <= 0) {
-            throw new Error('You cannot create a '+ this._type + ' discount with a negative value');
+        if(value <= 0) {
+            throw new Error('You cannot create a discount with a negative value');
         }
     }
 
-    apply(price : number) : number {
-        //@todo: instead of using magic values as string in this, it would be a lot better to change them into constant. This would protect us from misspellings. Can you improve this?
-        if(this._type === "none")  {
-            return price;
-        }
-        else if(this._type === "variable")  {
-            return (price - (price * this._value / 100));
-        } else if(this._type === "fixed") {
-            return Math.max(0, price - this._value);
-        }
-        else {
-            throw new Error('Invalid type of discount');
-        }
+    apply(price): number {
+        return (price - (price * this._value / 100));
     }
 
-    showCalculation(price : number) : string {
-        if(this._type === "none")  {
-            return "No discount";
-        }
-        else if(this._type === "variable")  {
-            return price + " € -  "+ this._value +"%";
-        } else if(this._type === "fixed") {
-            return price + "€ -  "+ this._value +"€ (min 0 €)";
-        }
-        else {
-            throw new Error('Invalid type of discount');
-        }
+    showCalculation(price: number): string {
+        return price + " € -  "+ this._value +"%";
     }
+
 }
+
+class Fixed implements Discount {
+    _type: discountType;
+    _value: number;
+
+    constructor(value : number = 0) {
+        this._value = value;
+
+        if(value <= 0) {
+            throw new Error('You cannot create a discount with a negative value');
+        }
+    }
+
+    apply(price): number {
+        return Math.max(0, price - this._value);
+    }
+
+    showCalculation(price: number): string {
+        return price + "€ -  "+ this._value +"€ (min 0 €)";
+    }
+
+}
+
+class None implements Discount {
+    _type: discountType;
+    _value: number;
+
+    constructor(value : number = 0) {
+        this._value = value;
+
+        if(this._value <= 0) {
+            throw new Error('You cannot create a discount with a negative value');
+        }
+    }
+
+    apply(price): number {
+        return price;
+    }
+
+    showCalculation(price: number): string {
+        return "No discount";
+    }
+
+}
+
+interface Discount {
+    _type: discountType;
+    _value: number;
+
+    apply(price): number;
+
+    showCalculation(price : number) : string;
+}
+
+// class Discount {
+//     private _type: discountType;
+//     private _value: number;
+//
+//     constructor(type : discountType, value : number = 0) {
+//         this._type = type;
+//         this._value = value;
+//
+//         if(this._type != 'none' && value <= 0) {
+//             throw new Error('You cannot create a '+ this._type + ' discount with a negative value');
+//         }
+//     }
+//
+//     apply(price : number) : number {
+//         //@todo: instead of using magic values as string in this, it would be a lot better to change them into constant. This would protect us from misspellings. Can you improve this?
+//         if(this._type === "none")  {
+//             return price;
+//         }
+//         else if(this._type === "variable")  {
+//             return (price - (price * this._value / 100));
+//         } else if(this._type === "fixed") {
+//             return Math.max(0, price - this._value);
+//         }
+//         else {
+//             throw new Error('Invalid type of discount');
+//         }
+//     }
+//
+//     showCalculation(price : number) : string {
+//         if(this._type === "none")  {
+//             return "No discount";
+//         }
+//         else if(this._type === "variable")  {
+//             return price + " € -  "+ this._value +"%";
+//         } else if(this._type === "fixed") {
+//             return price + "€ -  "+ this._value +"€ (min 0 €)";
+//         }
+//         else {
+//             throw new Error('Invalid type of discount');
+//         }
+//     }
+// }
 
 class Product {
     private _name : string;
@@ -92,10 +167,10 @@ class shoppingBasket {
 }
 
 let cart = new shoppingBasket();
-cart.addProduct(new Product('Chair', 25, new Discount("fixed", 10)));
-//cart.addProduct(new Product('Chair', 25, new Discount("fixed", -10)));
-cart.addProduct(new Product('Table', 50, new Discount("variable", 25)));
-cart.addProduct(new Product('Bed', 100, new Discount("none")));
+cart.addProduct(new Product('chair', 25, new Variable(10)));
+//cart.addProduct(new Product('Chair', 25, new Fixed( -10)));
+cart.addProduct(new Product('Table', 50, new Fixed(25)));
+cart.addProduct(new Product('Bed', 100, new None(1)));
 
 const tableElement = document.querySelector('#cart tbody');
 cart.products.forEach((product) => {
