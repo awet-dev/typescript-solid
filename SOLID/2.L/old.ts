@@ -1,5 +1,8 @@
 //This is called a Union, the discountType can only contain the following 2 values:
-type discountType = "variable" | "fixed" | "none";
+const VARIABLE = "variable";
+const FIXED = "fixed";
+const NONE = "none";
+type discountType = typeof VARIABLE | typeof FIXED | typeof NONE;
 
 class Variable implements Discount {
     _type: discountType;

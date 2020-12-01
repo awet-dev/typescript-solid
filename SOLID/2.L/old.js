@@ -1,3 +1,7 @@
+//This is called a Union, the discountType can only contain the following 2 values:
+var VARIABLE = "variable";
+var FIXED = "fixed";
+var NONE = "none";
 var Variable = /** @class */ (function () {
     function Variable(value) {
         if (value === void 0) { value = 0; }

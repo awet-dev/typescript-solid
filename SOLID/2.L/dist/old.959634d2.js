@@ -118,6 +118,11 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"old.js":[function(require,module,exports) {
+//This is called a Union, the discountType can only contain the following 2 values:
+var VARIABLE = "variable";
+var FIXED = "fixed";
+var NONE = "none";
+
 var Variable =
 /** @class */
 function () {
@@ -354,7 +359,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42667" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36893" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
