@@ -7,6 +7,11 @@ interface UserAuth {
     getFacebookLogin(token : string) : boolean;
 }
 
+interface AdminAuth {
+    checkPassword(password: string) : boolean;
+    resetPassword();
+}
+
 class User implements UserAuth {
     private _password : string = 'user';
     private _facebookToken : string;
@@ -41,27 +46,11 @@ class User implements UserAuth {
 }
 
 //admin cannot use google or facebook token
-class Admin implements UserAuth {
+class Admin implements AdminAuth {
     private _password : string = 'admin';
-
-    checkGoogleLogin(token: string): boolean {
-        return false;
-    }
 
     checkPassword(password: string): boolean {
         return (password === this._password);
-    }
-
-    getFacebookLogin(token: string): boolean {
-        return false;
-    }
-
-    setFacebookToken() {
-        throw new Error('Function not supported for admins');
-    }
-
-    setGoogleToken() {
-        throw new Error('Function not supported for admins');
     }
 
     resetPassword() {
@@ -78,33 +67,35 @@ const typeFacebookElement = <HTMLInputElement>document.querySelector('#typeFaceb
 const loginAsAdminElement = <HTMLInputElement>document.querySelector('#loginAsAdmin');
 const resetPasswordElement = <HTMLAnchorElement>document.querySelector('#resetPassword');
 
-let guest = new User;
-let admin = new Admin;
 
 document.querySelector('#login-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
-    let user = loginAsAdminElement.checked ? admin : guest;
+    debugger;
+    let auth = false;
 
     if(!loginAsAdminElement.checked) {
-        user.setGoogleToken('secret_token_google');
-        user.setFacebookToken('secret_token_fb');
-    }
-    debugger;
+        let guest = new User;
+        guest.setGoogleToken('secret_token_google');
+        guest.setFacebookToken('secret_token_fb');
 
-    let auth = false;
-    switch(true) {
-        case typePasswordElement.checked:
-            auth = user.checkPassword(passwordElement.value);
-            break;
-        case typeGoogleElement.checked:
-            auth = user.checkGoogleLogin('secret_token_google');
-            break;
-        case typeFacebookElement.checked:
-            debugger;
-            auth = user.getFacebookLogin('secret_token_fb');
-            break;
+        switch(true) {
+            case typePasswordElement.checked:
+                auth = guest.checkPassword(passwordElement.value);
+                break;
+            case typeGoogleElement.checked:
+                auth = guest.checkGoogleLogin('secret_token_google');
+                break;
+            case typeFacebookElement.checked:
+                debugger;
+                auth = guest.getFacebookLogin('secret_token_fb');
+                break;
+        }
+    } else {
+        let admin = new Admin;
+        auth = typePasswordElement.checked? admin.checkPassword(passwordElement.value): false;
     }
+
 
     if(auth) {
         alert('login success');
@@ -116,6 +107,6 @@ document.querySelector('#login-form').addEventListener('submit', (event) => {
 resetPasswordElement.addEventListener('click', (event) => {
    event.preventDefault();
 
-   let user = loginAsAdminElement.checked ? admin : guest;
+   let user = loginAsAdminElement.checked ? new Admin() : new User();
    user.resetPassword();
 });
