@@ -5,7 +5,7 @@ var User = /** @class */ (function () {
     //Interesting detail here: while I did not define a return type or param type, any deviation from the interface will give you an error.
     // Test it out by uncommenting the code below.
     User.prototype.checkGoogleLogin = function (token) {
-        // return "this will not work";
+        //return "this will not work";
         return (token === this._googleToken);
     };
     User.prototype.setGoogleToken = function (token) {
@@ -45,30 +45,35 @@ var typeGoogleElement = document.querySelector('#typeGoogle');
 var typeFacebookElement = document.querySelector('#typeFacebook');
 var loginAsAdminElement = document.querySelector('#loginAsAdmin');
 var resetPasswordElement = document.querySelector('#resetPassword');
+var guest = new User;
+var admin = new Admin;
 document.querySelector('#login-form').addEventListener('submit', function (event) {
     event.preventDefault();
+    var user = loginAsAdminElement.checked ? admin : guest;
     debugger;
     var auth = false;
     if (!loginAsAdminElement.checked) {
-        var guest = new User;
-        guest.setGoogleToken('secret_token_google');
-        guest.setFacebookToken('secret_token_fb');
-        switch (true) {
+        user = guest;
+        user.setGoogleToken('secret_token_google');
+        user.setFacebookToken('secret_token_fb');
+        switch (!loginAsAdminElement.checked) {
             case typePasswordElement.checked:
-                auth = guest.checkPassword(passwordElement.value);
+                auth = user.checkPassword(passwordElement.value);
                 break;
             case typeGoogleElement.checked:
-                auth = guest.checkGoogleLogin('secret_token_google');
+                auth = user.checkGoogleLogin('secret_token_google');
                 break;
             case typeFacebookElement.checked:
                 debugger;
-                auth = guest.getFacebookLogin('secret_token_fb');
+                auth = user.getFacebookLogin('secret_token_fb');
                 break;
         }
     }
     else {
-        var admin = new Admin;
-        auth = typePasswordElement.checked ? admin.checkPassword(passwordElement.value) : false;
+        user = admin;
+        if (typePasswordElement.checked) {
+            auth = user.checkPassword(passwordElement.value);
+        }
     }
     if (auth) {
         alert('login success');
@@ -79,6 +84,6 @@ document.querySelector('#login-form').addEventListener('submit', function (event
 });
 resetPasswordElement.addEventListener('click', function (event) {
     event.preventDefault();
-    var user = loginAsAdminElement.checked ? new Admin() : new User();
+    var user = loginAsAdminElement.checked ? admin : guest;
     user.resetPassword();
 });
