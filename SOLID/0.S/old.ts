@@ -28,8 +28,7 @@ class Car {
         this._fuel = Math.min(fuel + this._fuel, this.MAXIMUM_FUEL_CAPACITY);
     }
 
-    drive() {
-        let engine = new Engine();
+    drive(engine: Engine) {
         if(engine.engineStatus === false || this._fuel <= 0) {
             //what I am doing here is a good principle called "failing early"
             // If you have some conditions you need to check, that will exclude most of the code in your function check that first
@@ -118,7 +117,7 @@ musicSliderElement.addEventListener('input', (event) => {
     audioElement.volume = musicPlayer.musicLevel / 100;
 
     //@todo when you are repeating the same text over and over again maybe we should have made some constants for it? Can you do improve on this?
-    musicToggleElement.innerText = musicPlayer.musicLevel ? 'Turn music off' : 'Turn music on';
+    musicToggleElement.innerText = musicPlayer.musicLevel > 0 ? 'Turn music off' : 'Turn music on';
 });
 
 engineToggleElement.addEventListener('click', () => {
@@ -139,7 +138,7 @@ addFuelForm.addEventListener('submit', (event) => {
 });
 
 setInterval(() => {
-    car.drive();
+    car.drive(engine);
 
     //while it looks like both lines below are the same there is a subtle difference (you could put breakpoints here to see the difference):
     // this <cast> will only tell TypeScript that the value is a string, but the actual variable in JS is not changed in any way: it is in reality still a number
